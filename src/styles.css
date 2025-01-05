@@ -1,0 +1,6 @@
+.timebar-container {
+  position: relative;
+  width: 600px;
+  height: 35px;
+  border: 1px solid #ccc;
+}

@@ -1,0 +1,24 @@
+{
+  "name": "timebar",
+  "version": "1.0.0",
+  "description": "A simple JavaScript timebar plugin with Rollup bundling",
+  "main": "dist/timebar-plugin.js",
+  "module": "dist/timebar-plugin.esm.js",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c --watch"
+  },
+  "author": "Mo'men Muhammad",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-babel": "^6.0.0",
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "postcss": "^8.4.49",
+    "rollup": "^3.0.0",
+    "rollup-plugin-livereload": "^2.0.5",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-serve": "^1.1.1",
+    "rollup-plugin-terser": "^7.0.0"
+  }
+}
