@@ -1,13 +1,61 @@
 export default class Timebar {
-  timebars = [];
-  options = {}
+  options = {};
+  parent = null;
 
-  constructor(options = {}) {
+  constructor(parent, options = {}) {
+    if(!parent) {
+      throw new Error("Parent element is required");
+    }
+
+    if (!options.startTime || !options.endTime) {
+      throw new Error("startTime and endTime are required");
+    }
+
+
+    this.options = options;
+    this.parent = parent;
   }
 
+  _to24Hours(time) {
+    const regex = /(\d{2}):(\d{2})\s*(AM|PM|am|pm)?/g;
+    const matched = regex.exec(time);
 
-  render(canvas) {
+    if (!matched) throw new Error("Invalid time format");
+
+    let hours = +matched[1];
+    let minutes = +matched[2];
+    let meridiem = matched[3];
+
+    if (meridiem && meridiem.toLowerCase() === "pm" && hours === 12) {
+      hours += 12;
+    } else if (meridiem && meridiem.toLowerCase() === "am" && hours === 12) {
+      hours = 0;
+    }
+
+    return { hours, minutes };
+  }
+
+  render() {
+    const from = this._to24Hours(this.options.startTime);
+    const to = this._to24Hours(this.options.endTime);
+
+
+    const bar = document.createElement("div");
+    bar.classList.add("timebar");
+
+    const wrapper = document.createElement("div")
+    wrapper.classList.add("ruler");
+    
     
 
+    
+    for(let i = from.hours; i <= to.hours; i++) {
+      const indecator = document.createElement("div");
+      indecator.classList.add("timebar__hour");
+      indecator.textContent = i;
+      wrapper.appendChild(indecator);
+    }
+    this.parent.appendChild(wrapper);
+    this.parent.appendChild(bar);
   }
 }

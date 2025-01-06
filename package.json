@@ -6,14 +6,18 @@
   "module": "dist/timebar-plugin.esm.js",
   "scripts": {
     "build": "rollup -c",
-    "watch": "rollup -c --watch"
+    "dev": "rollup -c --watch",
+    "test": "jest"
   },
   "author": "Mo'men Muhammad",
   "license": "MIT",
   "devDependencies": {
+    "@babel/preset-env": "^7.26.0",
+    "@rollup/plugin-alias": "^5.1.1",
     "@rollup/plugin-babel": "^6.0.0",
     "@rollup/plugin-commonjs": "^25.0.0",
     "@rollup/plugin-node-resolve": "^15.0.0",
+    "jest": "^29.7.0",
     "postcss": "^8.4.49",
     "rollup": "^3.0.0",
     "rollup-plugin-livereload": "^2.0.5",

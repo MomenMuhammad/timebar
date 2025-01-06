@@ -4,6 +4,7 @@ import { terser } from 'rollup-plugin-terser';
 import postcss from 'rollup-plugin-postcss';
 import livereload from 'rollup-plugin-livereload';
 import serve from 'rollup-plugin-serve';
+import alias from '@rollup/plugin-alias'; // Import alias plugin
 import { defineConfig } from 'rollup';
 
 // Plugin Metadata
@@ -31,6 +32,11 @@ export default defineConfig({
     },
   ],
   plugins: [
+    alias({
+      entries: [
+        { find: '~', replacement: 'src' } // Add alias for ~ to src directory
+      ]
+    }),
     resolve(), // Resolves node_modules
     commonjs(), // Converts CommonJS to ES Modules
     postcss({
