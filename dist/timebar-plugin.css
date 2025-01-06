@@ -1,1 +1,1 @@
-.timebar-container{border:1px solid #ccc;height:35px;position:relative;width:600px}
+.timebar-container{height:5rem;position:relative;width:100%}.timebar-container .ruler{align-items:flex-end;display:flex;height:50px;justify-content:space-between;left:0;position:relative;top:0;width:100%}.timebar-container .ruler .ruler__item{display:flex;float:none;position:relative;width:3rem}.timebar{background-color:#faebd7;height:50px;left:0;position:relative;top:50;width:100%}

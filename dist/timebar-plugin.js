@@ -6,11 +6,22 @@
 })((function () { 'use strict';
 
   class Timebar {
-    constructor() {
-      console.log("Timebar Plugin Initialized");
+    timebars = [];
+    options = {}
+
+    constructor(options = {}) {
+    }
+
+
+    render(canvas) {
+      
+
     }
   }
 
-  new Timebar(".timebar");
+  new Timebar({
+    elements: document.querySelectorAll('.timebar'),
+    hours24
+  });
 
 }));

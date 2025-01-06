@@ -1,5 +1,13 @@
 export default class Timebar {
-  constructor() {
-    console.log("Timebar Plugin Initialized");
+  timebars = [];
+  options = {}
+
+  constructor(options = {}) {
+  }
+
+
+  render(canvas) {
+    
+
   }
 }
