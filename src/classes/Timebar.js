@@ -1,22 +1,52 @@
 export default class Timebar {
   options = {};
-  parent = null;
+  element = null;
 
-  constructor(parent, options = {}) {
-    if(!parent) {
-      throw new Error("Parent element is required");
+  startTime = null;
+  endTime = null;
+  callback = null;
+
+  constructor(element, options = {}) {
+    if (!element) {
+      throw new Error("Element is required");
     }
 
-    if (!options.startTime || !options.endTime) {
-      throw new Error("startTime and endTime are required");
+    if (!(element instanceof HTMLElement)) {
+      throw new Error("Element should be a valid HTMLElement");
     }
 
+    if (
+      !this.#isStartAndEndTimeInOptions(options) &&
+      !this.#isElementHasTimeAsDataAttribute(element)
+    ) {
+      throw new Error("Start time and end time are required");
+    }
+
+    this.startTime = this.#to24Hours(
+      element.dataset.startTime ?? options.startTime
+    );
+
+    this.endTime = this.#to24Hours(element.dataset.endTime ?? options.endTime);
+    this.callback = options.callback;
 
     this.options = options;
-    this.parent = parent;
+    this.element = element;
+    this.#render();
+    this.element.addEventListener(
+      "click",
+      this.calculateTimebarSelectedTime(this.startTime, this.endTime)
+    );
   }
 
-  _to24Hours(time) {
+  #isStartAndEndTimeInOptions(options) {
+    return options.startTime && options.endTime;
+  }
+
+  #isElementHasTimeAsDataAttribute(element) {
+    return element.dataset.startTime || element.dataset.endTime;
+  }
+
+  #to24Hours(time) {
     const regex = /(\d{2}):(\d{2})\s*(AM|PM|am|pm)?/g;
     const matched = regex.exec(time);
 
@@ -26,7 +56,7 @@ export default class Timebar {
     let minutes = +matched[2];
     let meridiem = matched[3];
 
-    if (meridiem && meridiem.toLowerCase() === "pm" && hours === 12) {
+    if (meridiem && meridiem.toLowerCase() === "pm" && hours !== 12) {
       hours += 12;
     } else if (meridiem && meridiem.toLowerCase() === "am" && hours === 12) {
       hours = 0;
@@ -35,27 +65,53 @@ export default class Timebar {
     return { hours, minutes };
   }
 
-  render() {
-    const from = this._to24Hours(this.options.startTime);
-    const to = this._to24Hours(this.options.endTime);
+  calculateTimebarSelectedTime(startTime, endTime) {
+    return (event) => {
+      const timebar = event.currentTarget;
+      const timebarRect = timebar.getBoundingClientRect();
+      const timebarWidth = timebarRect.width;
+      const clickX = event.clientX - timebarRect.left;
+      const percentage = (clickX / timebarWidth) * 100;
 
+      let hour, minutes;
+      const totalMinutes =
+        endTime.hours * 60 +
+        endTime.minutes -
+        (startTime.hours * 60 + startTime.minutes);
+      const selectedMinutes = (totalMinutes * percentage) / 100;
+      const totalSelectedMinutes =
+        startTime.hours * 60 + startTime.minutes + selectedMinutes;
+      hour = Math.floor(totalSelectedMinutes / 60);
+      minutes = Math.round(totalSelectedMinutes % 60);
 
+      // Round minutes to the nearest 0, 15, 30, or 45
+      const remainder = minutes % 15;
+      if (remainder < 8) {
+        minutes -= remainder;
+      } else {
+        minutes += 15 - remainder;
+      }
+
+      this.callback({ hour, minutes });
+      console.log({ hour, minutes });
+    };
+  }
+
+  #render() {
     const bar = document.createElement("div");
     bar.classList.add("timebar");
 
-    const wrapper = document.createElement("div")
+    const wrapper = document.createElement("div");
     wrapper.classList.add("ruler");
-    
-    
 
-    
-    for(let i = from.hours; i <= to.hours; i++) {
+    for (let i = this.startTime.hours; i <= this.endTime.hours; i++) {
       const indecator = document.createElement("div");
       indecator.classList.add("timebar__hour");
-      indecator.textContent = i;
+      indecator.textContent = `${i}:00`;
       wrapper.appendChild(indecator);
     }
-    this.parent.appendChild(wrapper);
-    this.parent.appendChild(bar);
+
+    this.element.appendChild(wrapper);
+    this.element.appendChild(bar);
   }
 }

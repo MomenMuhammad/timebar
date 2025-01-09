@@ -28,3 +28,8 @@
   height: 30px;
   border: 1px solid #ccc;
 }
+
+.timebar__hour{
+  background-color: red;
+  width: 0;
+}
