@@ -33,3 +33,7 @@
   background-color: red;
   width: 0;
 }
+
+.timebar__hour::before{
+  content: '|';
+}

@@ -14,6 +14,8 @@
     endTime = null;
     callback = null;
 
+    timebar = null;
+
     constructor(element, options = {}) {
       if (!element) {
         throw new Error("Element is required");
@@ -105,9 +107,36 @@
       };
     }
 
+
+    addEvent(event){
+
+      const startTime = this.#to24Hours(event.startTime);
+      const endTime = this.#to24Hours(event.endTime);
+
+      const delta = (endTime.hours * 60 + endTime.minutes) - (startTime.hours * 60 + startTime.minutes);  
+      const period = document.createElement("div");
+
+      const totalWidth = this.timebar.getBoundingClientRect().width;
+      const hourWidth = totalWidth / (this.endTime.hours - this.startTime.hours);
+      const eventWidth = hourWidth * (delta/60);
+
+      console.log({totalWidth, hourWidth, eventWidth});
+
+
+      period.classList.add("timebar__event");
+      period.style.position = "absolute";
+      period.style.left = `${(startTime.hours - this.startTime.hours) * hourWidth}px`;
+      period.style.width = `${eventWidth}px`;
+      period.style.height = "100%";
+      period.style.backgroundColor = event.color;
+
+      this.timebar.appendChild(period);
+    }
+
     #render() {
       const bar = document.createElement("div");
       bar.classList.add("timebar");
+      this.timebar = bar;
 
       const wrapper = document.createElement("div");
       wrapper.classList.add("ruler");
@@ -127,12 +156,23 @@
   const element = document.querySelector('.timebar-container');
 
 
-  new Timebar(element,{
+  const timebar = new Timebar(element,{
     is12Hours: false,
     callback: (time) => {
-
       alert(`Selected time is ${time.hour}:${time.minutes}`);
     },
+  });
+
+  timebar.addEvent({
+    startTime: "02:00",
+    endTime: "05:00",
+    color: "red"
+  });
+
+  timebar.addEvent({
+    startTime: "06:00",
+    endTime: "07:00",
+    color: "blue"
   });
 
   var index = {
